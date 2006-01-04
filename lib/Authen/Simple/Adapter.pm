@@ -83,8 +83,12 @@ sub authenticate {
 
     $status = $self->check( $username, $password );
 
-    if ( $self->cache ) {
-        $self->cache->set( "$username:$password" => $status ) if $status;
+    if ( $self->cache && $status ) {
+
+        $self->cache->set( "$username:$password" => $status );
+        
+        $self->log->debug( qq/Caching successful authentication status '$status' for user '$username'./ )
+          if $self->log;
     }
 
     return $status;
@@ -201,15 +205,16 @@ A subref that gets called with two scalar references, username and password.
         my ( $username, $password ) = @_;
         
         if ( length($$password) < 6 ) {
-            return 0; # invalid credintials
+            return 0; # abort, invalid credintials
         }
         
         if ( $$password eq 'secret' ) {
-            return 1; # successful authentication
+            return 1; # abort, successful authentication
         }
+        
+        return undef; # proceed;
     }
     
-
 =item * log ( $ )
 
 Any object that supports C<debug>, C<info>, C<error> and C<warn>.

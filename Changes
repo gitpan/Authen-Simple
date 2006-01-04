@@ -1,4 +1,7 @@
 Revision history for Perl extension Authen::Simple
 
-0.01 2006-01-03 00:00
+0.2 2006-01-04 00:00
+    - added tests
+
+0.1 2006-01-03 00:00
     - first release

@@ -24,12 +24,13 @@ sub _caller {
 
 sub _format {
     my ( $self, $level, @message ) = @_;
-    return sprintf( "[%s] [%s] %s\n", $self->_caller, $level, "@message" );
+    return sprintf( "[%s] [%s] [%s] %s\n", scalar localtime(), $self->_caller, $level, "@message" );
 }
 
 sub _output {
     my $self = shift;
     STDERR->print(@_);
+    STDERR->flush;
 }
 
 sub _log {

@@ -10,4 +10,12 @@ README
 t/01use.t
 t/02pod.t
 t/03podcoverage.t
+t/04log.t
+t/05adapter.t
+t/06cache.t
+t/07callback.t
+t/08simple.t
+t/lib/MyAdapter.pm
+t/lib/MyCache.pm
+t/lib/MyLog.pm
 META.yml
