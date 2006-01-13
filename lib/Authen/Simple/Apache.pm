@@ -71,6 +71,12 @@ sub handle {
         return HTTP_UNAUTHORIZED;
     }
 
+    unless ( defined($password) && length($password) ) {
+        $r->note_basic_auth_failure;
+        $r->log->error("PerlAuthenHandler $class - No password was given.");
+        return HTTP_UNAUTHORIZED;
+    }
+
     ( my $prefix = $class ) =~ s/://g;
 
     my %params = (

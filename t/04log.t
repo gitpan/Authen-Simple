@@ -35,6 +35,6 @@ $stderr->seek( 0, 0 );
 my @messages = $stderr->getlines;
 
 ok( @messages == 3, 'Got three messages' );
-like( $messages[0], qr/\[error\] error$/, 'First log message' );
-like( $messages[1], qr/\[error\] error$/, 'Second log message' );
-like( $messages[2], qr/\[warn\] warn$/,   'Third log message' );
+like( $messages[0], qr/\[error\] \[main\] error$/, 'First log message' );
+like( $messages[1], qr/\[error\] \[main\] error$/, 'Second log message' );
+like( $messages[2], qr/\[warn\] \[main\] warn$/,   'Third log message' );

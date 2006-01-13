@@ -5,7 +5,7 @@ use warnings;
 
 use Params::Validate qw[];
 
-our $VERSION = 0.2;
+our $VERSION = 0.3;
 
 sub new {
     my $class = shift;
@@ -86,6 +86,8 @@ L<Authen::Simple::HTTP>.
 L<Authen::Simple::Kerberos>.
 
 L<Authen::Simple::LDAP>.
+
+L<Authen::Simple::NIS>.
 
 L<Authen::Simple::PAM>.
 

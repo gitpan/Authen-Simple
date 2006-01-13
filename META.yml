@@ -1,23 +1,29 @@
 ---
 name: Authen-Simple
-version: 0.2
+version: 0.3
 author:
-  - Christian Hansen C<ch@ngmedia.com>
+  - 'Christian Hansen C<ch@ngmedia.com>'
 abstract: Simple Authentication
 license: perl
 requires:
   Class::Accessor::Fast: 0
   Class::Data::Inheritable: 0
+  Crypt::PasswdMD5: 0
+  Digest::MD5: 0
+  Digest::SHA: 0
+  MIME::Base64: 0
   Params::Validate: 0
   Test::More: 0
 provides:
   Authen::Simple:
     file: lib/Authen/Simple.pm
-    version: 0.2
+    version: 0.3
   Authen::Simple::Adapter:
     file: lib/Authen/Simple/Adapter.pm
   Authen::Simple::Apache:
     file: lib/Authen/Simple/Apache.pm
   Authen::Simple::Log:
     file: lib/Authen/Simple/Log.pm
+  Authen::Simple::Password:
+    file: lib/Authen/Simple/Password.pm
 generated_by: Module::Build version 0.2611

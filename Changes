@@ -1,5 +1,9 @@
 Revision history for Perl extension Authen::Simple
 
+0.3 2006-00-00 00:00
+    - added Authen::Simple::Password
+    - added reference to Authen::Simple::NIS
+
 0.2 2006-01-04 00:00
     - added tests
 

@@ -6,7 +6,11 @@ my $build = Module::Build->new(
     module_name        => 'Authen::Simple',
     requires           => {
         'Class::Accessor::Fast'    => 0,
-        'Class::Data::Inheritable' => 0,
+        'Class::Data::Inheritable' => 0, 
+        'Crypt::PasswdMD5'         => 0, # Authen::Simple::Password
+        'Digest::MD5'              => 0, # Authen::Simple::Password
+        'Digest::SHA'              => 0, # Authen::Simple::Password
+        'MIME::Base64'             => 0, # Authen::Simple::Password
         'Params::Validate'         => 0,
         'Test::More'               => 0
     },

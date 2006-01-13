@@ -7,6 +7,10 @@ WriteMakefile
           'PREREQ_PM' => {
                            'Class::Accessor::Fast' => '0',
                            'Class::Data::Inheritable' => '0',
+                           'Crypt::PasswdMD5' => '0',
+                           'Digest::MD5' => '0',
+                           'Digest::SHA' => '0',
+                           'MIME::Base64' => '0',
                            'Params::Validate' => '0',
                            'Test::More' => '0'
                          },

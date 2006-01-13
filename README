@@ -34,6 +34,8 @@ SEE ALSO
 
     Authen::Simple::LDAP.
 
+    Authen::Simple::NIS.
+
     Authen::Simple::PAM.
 
     Authen::Simple::Passwd.

@@ -4,9 +4,10 @@ use strict;
 use warnings;
 use base qw[Class::Accessor::Fast Class::Data::Inheritable];
 
-use Authen::Simple::Log qw[];
-use Carp                qw[];
-use Params::Validate    qw[];
+use Authen::Simple::Log      qw[];
+use Authen::Simple::Password qw[];
+use Carp                     qw[];
+use Params::Validate         qw[];
 
 __PACKAGE__->mk_classdata( _options => { } );
 __PACKAGE__->mk_accessors( qw[ cache callback log ] );
@@ -96,6 +97,11 @@ sub authenticate {
 
 sub check {
     Carp::croak( __PACKAGE__ . qq/->check is an abstract method/ );
+}
+
+sub check_password {
+    my $self = shift;
+    return Authen::Simple::Password->check(@_);
 }
 
 sub options {
@@ -212,7 +218,7 @@ A subref that gets called with two scalar references, username and password.
             return 1; # abort, successful authentication
         }
         
-        return undef; # proceed;
+        return; # proceed;
     }
     
 =item * log ( $ )
@@ -247,6 +253,8 @@ aborted by callback or a cache hit.
 
 Must be implemented in sublcass, should return true on success and false on failure.
 
+=item * check_password( $password, $encrypted )
+
 =item * options ( \%options )
 
 Must be set in subclass, should be a valid L<Params::Validate> specification. 
@@ -269,6 +277,8 @@ Accessors for options will be created unless defined in sublcass.
 =head1 SEE ALSO
 
 L<Authen::Simple>
+
+L<Authen::Simple::Password>
 
 L<Params::Validate>
 
