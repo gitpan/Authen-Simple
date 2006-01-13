@@ -1,6 +1,6 @@
 ---
 name: Authen-Simple
-version: 0.3
+version: 0.4
 author:
   - 'Christian Hansen C<ch@ngmedia.com>'
 abstract: Simple Authentication
@@ -17,7 +17,7 @@ requires:
 provides:
   Authen::Simple:
     file: lib/Authen/Simple.pm
-    version: 0.3
+    version: 0.4
   Authen::Simple::Adapter:
     file: lib/Authen/Simple/Adapter.pm
   Authen::Simple::Apache:

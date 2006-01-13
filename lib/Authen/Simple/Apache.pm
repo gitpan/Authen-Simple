@@ -152,6 +152,10 @@ L<Authen::Simple>.
 
 L<Authen::Simple::ActiveDirectory>.
 
+L<Authen::Simple::CDBI>.
+
+L<Authen::Simple::DBI>.
+
 L<Authen::Simple::FTP>.
 
 L<Authen::Simple::HTTP>.
@@ -159,6 +163,8 @@ L<Authen::Simple::HTTP>.
 L<Authen::Simple::Kerberos>.
 
 L<Authen::Simple::LDAP>.
+
+L<Authen::Simple::NIS>.
 
 L<Authen::Simple::PAM>.
 

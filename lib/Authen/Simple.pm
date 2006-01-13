@@ -5,7 +5,7 @@ use warnings;
 
 use Params::Validate qw[];
 
-our $VERSION = 0.3;
+our $VERSION = 0.4;
 
 sub new {
     my $class = shift;
@@ -61,6 +61,8 @@ Authen::Simple - Simple Authentication
 
 =head1 DESCRIPTION
 
+Simple and consistent framework for authentication.
+
 =head1 METHODS
 
 =over 4
@@ -78,6 +80,10 @@ Returns true on success and false on failure.
 =head1 SEE ALSO
 
 L<Authen::Simple::ActiveDirectory>.
+
+L<Authen::Simple::CDBI>.
+
+L<Authen::Simple::DBI>.
 
 L<Authen::Simple::FTP>.
 

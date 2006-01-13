@@ -16,6 +16,8 @@ SYNOPSIS
         }
 
 DESCRIPTION
+    Simple and consistent framework for authentication.
+
 METHODS
     * new
         This method takes an array of "Authen::Simple" adapters. Required.
@@ -25,6 +27,10 @@ METHODS
 
 SEE ALSO
     Authen::Simple::ActiveDirectory.
+
+    Authen::Simple::CDBI.
+
+    Authen::Simple::DBI.
 
     Authen::Simple::FTP.
 

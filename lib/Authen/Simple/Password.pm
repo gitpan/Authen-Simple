@@ -11,6 +11,7 @@ use MIME::Base64     qw[];
 sub check {
     my ( $class, $password, $encrypted ) = @_;
 
+    # Plain
     return 1 if $password eq $encrypted;
 
     #                L   S
@@ -20,46 +21,17 @@ sub check {
     # $2$ Blowfish  34  16
     # $3$ NT-Hash    ?   ?
 
+    # Crypt
     return 1 if crypt( $password, $encrypted ) eq $encrypted;
 
-    if ( index( $encrypted, '$1$' ) == 0 ) {
-        return 1 if Crypt::PasswdMD5::unix_md5_crypt( $password, $encrypted ) eq $encrypted;
+    # Crypt Modular Format
+    if ( $encrypted =~ /^\$(\w+)\$/ ) {
+        return 1 if $class->_check_modular( $password, $encrypted, lc($1) );
     }
 
-    if ( index( $encrypted, '$apr1$' ) == 0 ) {
-        return 1 if Crypt::PasswdMD5::apache_md5_crypt( $password, $encrypted ) eq $encrypted;
-    }
-
-    if ( index( $encrypted, '{CLEARTEXT}' ) == 0 ) {
-        my $hash = substr( $encrypted, 11 );
-        return 1 if $password eq $hash;
-    }
-
-    if ( index( $encrypted, '{CRYPT}' ) == 0 ) {
-        my $hash = substr( $encrypted, 7 );
-        return 1 if crypt( $password, $hash ) eq $hash;
-    }
-
-    if ( index( $encrypted, '{MD5}' ) == 0 ) {
-        my $hash = MIME::Base64::decode( substr( $encrypted, 5 ) );
-        return 1 if Digest::MD5::md5($password) eq $hash;
-    }
-
-    if ( index( $encrypted, '{SMD5}' ) == 0 ) {
-        my $hash = MIME::Base64::decode( substr( $encrypted, 6 ) );
-        my $salt = substr( $hash, 16 );
-        return 1 if Digest::MD5::md5( $password, $salt ) . $salt eq $hash;
-    }
-
-    if ( index( $encrypted, '{SHA}' ) == 0 ) {
-        my $hash = MIME::Base64::decode( substr( $encrypted, 5 ) );
-        return 1 if Digest::SHA::sha1($password) eq $hash;
-    }
-
-    if ( index( $encrypted, '{SSHA}' ) == 0 ) {
-        my $hash = MIME::Base64::decode( substr( $encrypted, 6 ) );
-        my $salt = substr( $hash, 20 );
-        return 1 if Digest::SHA::sha1( $password, $salt ) . $salt eq $hash;
+    # LDAP Format
+    if ( $encrypted =~ /^\{(\w+)\}/ ) {
+        return 1 if $class->_check_ldap( $password, $encrypted, lc($1) );
     }
 
     # MD5
@@ -88,19 +60,6 @@ sub check {
         return 1 if Digest::SHA::sha1_hex($password) eq $encrypted;
     }
 
-    # SHA-2 224
-    if ( length($encrypted) == 28 ) {
-        return 1 if Digest::SHA::sha224($password) eq $encrypted;
-    }
-
-    if ( length($encrypted) == 38 ) {
-        return 1 if Digest::SHA::sha224_base64($password) eq $encrypted;
-    }
-
-    if ( length($encrypted) == 56 ) {
-        return 1 if Digest::SHA::sha224_hex($password) eq $encrypted;
-    }
-
     # SHA-2 256
     if ( length($encrypted) == 32 ) {
         return 1 if Digest::SHA::sha256($password) eq $encrypted;
@@ -114,30 +73,56 @@ sub check {
         return 1 if Digest::SHA::sha256_hex($password) eq $encrypted;
     }
 
-    # SHA-2 384
-    if ( length($encrypted) == 48 ) {
-        return 1 if Digest::SHA::sha384($password) eq $encrypted;
+    return 0;
+}
+
+sub _check_ldap {
+    my ( $class, $password, $encrypted, $scheme ) = @_;
+
+    if ( $scheme eq 'cleartext' ) {
+        my $hash = substr( $encrypted, 11 );
+        return 1 if $password eq $hash;
     }
 
-    if ( length($encrypted) == 64 ) {
-        return 1 if Digest::SHA::sha384_base64($password) eq $encrypted;
+    if ( $scheme eq 'crypt' ) {
+        my $hash = substr( $encrypted, 7 );
+        return 1 if crypt( $password, $hash ) eq $hash;
     }
 
-    if ( length($encrypted) == 96 ) {
-        return 1 if Digest::SHA::sha384_hex($password) eq $encrypted;
+    if ( $scheme eq 'md5' ) {
+        my $hash = MIME::Base64::decode( substr( $encrypted, 5 ) );
+        return 1 if Digest::MD5::md5($password) eq $hash;
     }
 
-    # SHA-2 512
-    if ( length($encrypted) == 64 ) {
-        return 1 if Digest::SHA::sha512($password) eq $encrypted;
+    if ( $scheme eq 'smd5' ) {
+        my $hash = MIME::Base64::decode( substr( $encrypted, 6 ) );
+        my $salt = substr( $hash, 16 );
+        return 1 if Digest::MD5::md5( $password, $salt ) . $salt eq $hash;
     }
 
-    if ( length($encrypted) == 86 ) {
-        return 1 if Digest::SHA::sha512_base64($password) eq $encrypted;
+    if ( $scheme eq 'sha' ) {
+        my $hash = MIME::Base64::decode( substr( $encrypted, 5 ) );
+        return 1 if Digest::SHA::sha1($password) eq $hash;
     }
 
-    if ( length($encrypted) == 128 ) {
-        return 1 if Digest::SHA::sha512_hex($password) eq $encrypted;
+    if ( $scheme eq 'ssha' ) {
+        my $hash = MIME::Base64::decode( substr( $encrypted, 6 ) );
+        my $salt = substr( $hash, 20 );
+        return 1 if Digest::SHA::sha1( $password, $salt ) . $salt eq $hash;
+    }
+
+    return 0;
+}
+
+sub _check_modular {
+    my ( $class, $password, $encrypted, $format ) = @_;
+
+    if ( $format eq '1' ) {
+        return 1 if Crypt::PasswdMD5::unix_md5_crypt( $password, $encrypted ) eq $encrypted;
+    }
+
+    if ( $format eq 'apr1' ) {
+        return 1 if Crypt::PasswdMD5::apache_md5_crypt( $password, $encrypted ) eq $encrypted;
     }
 
     return 0;
@@ -154,10 +139,12 @@ Authen::Simple::Password - Simple password checking
 =head1 SYNOPSIS
 
     if ( Authen::Simple::Password->check( $password, $encrypted ) ) {
-        print "Verified";
+        # OK
     }
 
 =head1 DESCRIPTION
+
+Provides a simple way to verify passwords.
 
 =head1 METHODS
 
@@ -166,6 +153,76 @@ Authen::Simple::Password - Simple password checking
 =item * check( $password, $encrypted )
 
 Returns true on success and false on failure.
+
+=back
+
+=head1 SUPPORTED PASSWORD FORMATS
+
+=over 4
+
+=item * Plain
+
+Plaintext
+
+=item * Crypt
+
+L<crypt(3)>
+
+=item * Crypt Modular
+
+=over 8
+
+=item * $1$ 
+
+MD5-based password algorithm
+
+=item * $apr$ 
+
+MD5-based password algorithm, Apache variant
+
+=back
+
+=item * LDAP
+
+=over 8
+
+=item * {CLEARTEXT}
+
+Plaintext.
+
+=item * {CRYPT}
+
+Uses L<crypt(3)>
+
+=item * {MD5}
+
+MD5 algorithm
+
+=item * {SMD5}
+
+Seeded MD5 algorithm
+
+=item * {SHA}
+
+SHA-1 algorithm
+
+=item * {SSHA}
+
+Seeded SHA-1 algorithm
+
+=back
+
+=item * MD5 algorithm
+
+Encoded as binary, Base64 or hexadecimal.
+
+=item * SHA-1 algorithm
+
+Encoded as binary, Base64 or hexadecimal.
+
+=item * SHA-2 256 algorithm
+
+Encoded as binary, Base64 or hexadecimal.
 
 =back
 
