@@ -19,10 +19,12 @@ DESCRIPTION
     Simple and consistent framework for authentication.
 
 METHODS
-    * new
+    *   new
+
         This method takes an array of "Authen::Simple" adapters. Required.
 
-    * authenticate( $username, $password )
+    *   authenticate( $username, $password )
+
         Returns true on success and false on failure.
 
 SEE ALSO
@@ -57,7 +59,7 @@ SEE ALSO
     Authen::Simple::SSH.
 
 AUTHOR
-    Christian Hansen "ch@ngmedia.com"
+    Christian Hansen "chansen@cpan.org"
 
 COPYRIGHT
     This program is free software, you can redistribute it and/or modify it

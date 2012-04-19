@@ -5,7 +5,7 @@ use warnings;
 
 use Params::Validate qw[];
 
-our $VERSION = 0.4;
+our $VERSION = '0.5';
 
 sub new {
     my $class = shift;
@@ -111,7 +111,7 @@ L<Authen::Simple::SSH>.
 
 =head1 AUTHOR
 
-Christian Hansen C<ch@ngmedia.com>
+Christian Hansen C<chansen@cpan.org>
 
 =head1 COPYRIGHT
 
